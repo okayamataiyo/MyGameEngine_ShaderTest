@@ -62,6 +62,12 @@ void Sprite::Draw(Transform& transform)
 
 }
 
+void Sprite::Draw(XMMATRIX& worldMatrix)
+{
+	PassDataToCB(worldMatrix);
+	SetBufferToPipeline();
+}
+
 void Sprite::Release()
 {
 

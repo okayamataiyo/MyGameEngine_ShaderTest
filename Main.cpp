@@ -6,8 +6,11 @@
 #include "Engine/Input.h"
 #include "Engine/Rootjob.h"
 #include "Engine/Model.h"
+#include "Engine/Sprite.h"
 
 #pragma comment(lib, "winmm.lib")
+
+Sprite* S;
 
 //定数宣言
 const char* WIN_CLASS_NAME = "SampleGame";  //ウィンドウクラス名
@@ -64,6 +67,8 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 	//ウィンドウを表示
 	ShowWindow(hWnd, nCmdShow);
 
+	S = new Sprite;
+
 	//Direct3D初期化
 	hr = Direct3D::Initialize(winW, winH, hWnd);
 	if (FAILED(hr))
@@ -81,6 +86,8 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 
 	pRootjob = new Rootjob(nullptr);
 	pRootjob->Initialize();
+
+	hr = S->Initialize();
 
 	//メッセージループ（何か起きるのを待つ）
 	MSG msg;
@@ -151,6 +158,9 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 			//ルートジョブから、すべてのオブジェクトのドローを呼ぶ
 			pRootjob->DrawSub();
 
+			XMMATRIX mat = XMMatrixScaling(512.0f / 800.0f, 256.0f / 600.0f, 1.0f);
+			S->Draw(mat);
+
 			Direct3D::EndDraw();
 
 		}
@@ -159,6 +169,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 	Model::Release();
 	pRootjob->ReleaseSub();
 	SAFE_DELETE(pRootjob);
+	SAFE_DELETE(S);
 
 	Input::Release();
 	Direct3D::Release();
