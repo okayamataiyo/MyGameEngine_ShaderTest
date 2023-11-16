@@ -190,7 +190,7 @@ HRESULT Sprite::LoadTexture(){
 	pTexture_ = new Texture();
 
 	HRESULT hr;
-	hr = pTexture_->Load("Assets\\Pappillon.png");
+	hr = pTexture_->Load("Assets\\PappillonUV展開.png");
 	if (FAILED(hr)) {
 		MessageBox(NULL, "テクスチャの作成に失敗しました", "エラー", MB_OK);
 		return hr;
