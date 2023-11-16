@@ -159,7 +159,7 @@ HRESULT Quad::LoadTexture()
 {
 	pTexture_ = new Texture;
 	HRESULT hr;
-	hr = pTexture_->Load("Assets\\Pappillon.png");
+	hr = pTexture_->Load("Assets\\Ballima.png");
 	if (FAILED(hr))
 	{
 		MessageBox(NULL, "テクスチャの作成に失敗しました", "エラー", MB_OK);
