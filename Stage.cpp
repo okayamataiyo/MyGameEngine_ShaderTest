@@ -17,7 +17,7 @@ void Stage::Initialize()
 {
 
     //モデルデータのロード
-    hModel_ = Model::Load("Assets/BoxPappillon.fbx");
+    hModel_ = Model::Load("Assets/Ground.fbx");
     assert(hModel_ >= 0);
 }
 

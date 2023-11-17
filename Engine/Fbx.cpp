@@ -138,18 +138,7 @@ void Fbx::InitIndex(fbxsdk::FbxMesh* mesh)
     //    }
     //}
 
-    //D3D11_BUFFER_DESC   bd;
-    //bd.Usage = D3D11_USAGE_DEFAULT;
-    //bd.ByteWidth = sizeof(int) * polygonCount_ * 3;
-    //bd.BindFlags = D3D11_BIND_INDEX_BUFFER;
-    //bd.CPUAccessFlags = 0;
-    //bd.MiscFlags = 0;
     int count = 0;
-
-    //D3D11_SUBRESOURCE_DATA InitData;
-    //InitData.pSysMem = index;
-    //InitData.SysMemPitch = 0;
-    //InitData.SysMemSlicePitch = 0;
     
     //全ポリゴン
     for (DWORD poly = 0; poly < polygonCount_; poly++)
@@ -170,11 +159,6 @@ void Fbx::InitIndex(fbxsdk::FbxMesh* mesh)
     }
     indexCount_[i] = count;
 
-    //HRESULT hr;
-    //hr = Direct3D::pDevice_->CreateBuffer(&bd, &InitData, &pIndexBuffer_);
-    //if (FAILED(hr))
-    //{
-    //    MessageBox(NULL, "インデックスバッファの作成に失敗しました", "エラー", MB_OK);
     D3D11_BUFFER_DESC   bd;
     bd.Usage = D3D11_USAGE_DEFAULT;
     bd.ByteWidth = sizeof(int) * polygonCount_ * 3;
