@@ -4,7 +4,7 @@
 //Stageを管理するクラス
 class Stage : public GameObject
 {
-    int hModel_[2];    //モデル番号
+    int hModel_[3];    //モデル番号
     
 
 public:
