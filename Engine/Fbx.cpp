@@ -222,7 +222,7 @@ void Fbx::InitMaterial(fbxsdk::FbxNode* pNode)
 
             //ファイル名+拡張だけにする
             char name[_MAX_FNAME];	//ファイル名
-            char ext[_MAX_EXT];	//拡張子
+            char ext[_MAX_EXT];	    //拡張子
             _splitpath_s(textureFilePath, nullptr, 0, nullptr, 0, name, _MAX_FNAME, ext, _MAX_EXT);
             wsprintf(name, "%s%s", name, ext);
 

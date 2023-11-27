@@ -1,5 +1,3 @@
-ks = 2.0;
-n = 8.0;
 
 //───────────────────────────────────────
  // テクスチャ＆サンプラーデータのグローバル変数定義
@@ -13,7 +11,7 @@ SamplerState	g_sampler : register(s0);	//サンプラー
 //───────────────────────────────────────
 cbuffer global
 {
-	float4		Wm;
+	//float4		Wm;
 	float4x4	matWVP;			// ワールド・ビュー・プロジェクションの合成行列
 	float4x4	matNormal;      // ワールド行列
 	float4		diffuseColor;	//マテリアルの色=拡散反射係数
