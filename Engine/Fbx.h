@@ -25,10 +25,12 @@ class Fbx
 
 	//コンスタントバッファー
 	struct CONSTANT_BUFFER {
-		XMMATRIX matWVP;
-		XMMATRIX matNormal;
-		XMFLOAT4 diffuseColor;
-		int isTextured;
+		XMMATRIX matWVP;			//mvp
+		XMMATRIX matNormal;			//ワールド変換だけのやつ
+		XMFLOAT4 diffuseColor;		//面の色
+		XMFLOAT4 lightDirection;	//光の視点
+		XMFLOAT4 eyePos;			//目の視点
+		BOOL isTextured;
 	};
 
 	//頂点情報

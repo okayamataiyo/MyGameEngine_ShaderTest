@@ -4,6 +4,11 @@
 #include "Camera.h"
 #include "Texture.h"
 
+using namespace DirectX;
+using namespace Camera;
+
+const XMFLOAT4 LIGHT_DIRECTION{1,5,0,1};
+
 
 Fbx::Fbx()
     :vertexCount_(0),polygonCount_(0),materialCount_(0),
@@ -190,6 +195,8 @@ void Fbx::InitConstantBuffer()
     cb.MiscFlags = 0;
     cb.StructureByteStride = 0;
 
+
+
     // コンスタントバッファの作成
     HRESULT hr;
     hr = Direct3D::pDevice_->CreateBuffer(&cb, nullptr, &pConstantBuffer_);
@@ -259,6 +266,12 @@ void Fbx::Draw(Transform& transform)
         CONSTANT_BUFFER cb;
         cb.matWVP = XMMatrixTranspose(transform.GetWorldMatrix() * Camera::GetViewMatrix() * Camera::GetProjectionMatrix());
         cb.matNormal = XMMatrixTranspose(transform.GetNormalMatrix());
+        cb.diffuseColor = pMaterialList_[i].diffuse;
+        cb.lightDirection = LIGHT_DIRECTION;
+        XMStoreFloat4(&cb.eyePos,Camera::GetEyePosition());
+        cb.isTextured = false;
+
+
 
         if (i == 1) {
             cb.diffuseColor = XMFLOAT4(1, 0, 0, 1);

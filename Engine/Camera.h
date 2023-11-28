@@ -23,7 +23,7 @@ namespace Camera
 	void SetTarget(XMVECTOR target);
 	void SetTarget(XMFLOAT3 target);
 
-	//XMVECTOR EyePosition() { return position_; }
+	XMVECTOR GetEyePosition();
 
 	//ƒrƒ…[s—ñ‚ğæ“¾
 	XMMATRIX GetViewMatrix();
