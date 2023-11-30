@@ -33,7 +33,7 @@ void Stage::Initialize()
     assert(hModel_[1] >= 0);
 
     //モデルデータのロード
-    hModel_[2] = Model::Load("Assets/Ball.fbx");
+    hModel_[2] = Model::Load("Assets/Ball03.fbx");
     assert(hModel_[2] >= 0);
 }
 
@@ -46,7 +46,10 @@ void Stage::Update()
     trans_B.position_.x = 2;
     trans_B.position_.z = 2;
     trans_B.position_.y = 1;
-    trans_B.rotate_.y += 0.5;
+    //trans_B.rotate_.z += 0.5;
+    //trans_B.rotate_.y += 0.5;
+    //trans_B.rotate_.x += 0.5;
+    trans_B.rotate_.x = 180;
 }
 
 //描画
