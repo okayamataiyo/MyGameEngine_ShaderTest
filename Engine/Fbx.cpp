@@ -7,7 +7,7 @@
 using namespace DirectX;
 using namespace Camera;
 
-const XMFLOAT4 LIGHT_DIRECTION{1,5,0,1};
+const XMFLOAT4 LIGHT_DIRECTION{1,1,1,0};
 
 
 Fbx::Fbx()
@@ -267,8 +267,8 @@ void Fbx::Draw(Transform& transform)
         cb.matWVP = XMMatrixTranspose(transform.GetWorldMatrix() * Camera::GetViewMatrix() * Camera::GetProjectionMatrix());
         cb.matNormal = XMMatrixTranspose(transform.GetNormalMatrix());
         cb.diffuseColor = pMaterialList_[i].diffuse;
-        cb.lightDirection = LIGHT_DIRECTION;
-        XMStoreFloat4(&cb.eyePos,Camera::GetEyePosition());
+        cb.lightPosition = LIGHT_DIRECTION;
+        XMStoreFloat4(&cb.eyePosition,Camera::GetEyePosition());
         cb.isTextured = false;
 
 

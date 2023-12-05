@@ -1,6 +1,6 @@
 #include "Engine/Model.h"
-#include "Stage.h"
 #include "Engine/Sprite.h"
+#include "Stage.h"
 
 Transform trans_G;
 Transform trans_A;
@@ -47,6 +47,12 @@ void Stage::Update()
     trans_B.position_.z = 2;
     trans_B.position_.y = 1;
     trans_B.rotate_.y += 0.5;
+    //CBUFF_STAGESCENE cb;
+    //cb.lightPosition = lightSourcePosition_;
+    //XMStoreFloat4(&cb.eyePos, Camera::GetEyePosition());
+    //Direct3D::pContext_->UpdateSubresource(pCBStageScene_, 0, NULL, &cb, 0, 0);
+    //Direct3D::pContext_->VSSetConstantBuffers(1, 1, &pCBStageScene_);   //頂点シェーダー
+    //Direct3D::pContext_->PSSetConstantBuffers(1, 1, &pCBStageScene_);   //ピクセルシェーダー
 }
 
 //描画
