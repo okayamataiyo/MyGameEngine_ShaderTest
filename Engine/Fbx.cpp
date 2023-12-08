@@ -267,20 +267,20 @@ void Fbx::Draw(Transform& transform)
         cb.matWVP = XMMatrixTranspose(transform.GetWorldMatrix() * Camera::GetViewMatrix() * Camera::GetProjectionMatrix());
         cb.matNormal = XMMatrixTranspose(transform.GetNormalMatrix());
         cb.diffuseColor = pMaterialList_[i].diffuse;
-        cb.lightPosition = LIGHT_DIRECTION;
-        XMStoreFloat4(&cb.eyePosition,Camera::GetEyePosition());
-        cb.isTextured = false;
+        //cb.lightPosition = LIGHT_DIRECTION;
+        //XMStoreFloat4(&cb.eyePosition,Camera::GetEyePosition());
+        cb.isTextured = pMaterialList_[i].pTexture != nullptr;
 
+        Direct3D::pContext_->UpdateSubresource(pConstantBuffer_, 0, NULL, &cb, 0, 0);
 
-
-        if (i == 1) {
+        /*if (i == 1) {
             cb.diffuseColor = XMFLOAT4(1, 0, 0, 1);
             cb.isTextured = pMaterialList_[i].pTexture != nullptr;
         }
         else {
             cb.diffuseColor = pMaterialList_[i].diffuse;
             cb.isTextured = pMaterialList_[i].pTexture != nullptr;
-        }
+        }*/
 
 //        cb.diffuseColor = pMaterialList_[i].diffuse;
 //        cb.isTextured = pMaterialList_[i].pTexture != nullptr;
@@ -318,9 +318,6 @@ void Fbx::Draw(Transform& transform)
         //頂点バッファ、インデックスバッファ、コンスタントバッファをパイプラインにセット
         /*UINT stride = sizeof(VERTEX);
         UINT offset = 0;*/
-
-
-       
 
         if (pMaterialList_[i].pTexture)
         {
