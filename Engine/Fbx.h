@@ -25,6 +25,7 @@ class Fbx
 	//コンスタントバッファー
 	struct CONSTANT_BUFFER {
 		XMMATRIX matWVP;			//mvp
+		XMMATRIX matW;
 		XMMATRIX matNormal;			//ワールド変換だけのやつ
 		XMFLOAT4 diffuseColor;		//面の色
 		//XMFLOAT4 lightPosition;		//光の視点
