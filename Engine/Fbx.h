@@ -63,8 +63,6 @@ public:
 	void SetFlagColor(XMFLOAT4 col);
 	HRESULT Load(std::string fileName);
 	void Draw(Transform& transform);
-	void SetLightPos(XMFLOAT4& pos);
-	XMFLOAT4 GetLightPos() { return(lightSourcePosition_); }
 	void Release();
 };
 

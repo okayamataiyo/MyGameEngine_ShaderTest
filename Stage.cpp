@@ -1,6 +1,8 @@
 #include "Engine/Model.h"
 #include "Engine/Sprite.h"
 #include "Engine/Camera.h"
+#include "Engine/Input.h"
+#include "Engine/Fbx.h"
 #include "Stage.h"
 
 Transform trans_G;
@@ -84,6 +86,51 @@ void Stage::Update()
     Direct3D::pContext_->UpdateSubresource(pCBStageScene_,0, NULL,&cb,0,0); 
     Direct3D::pContext_->VSSetConstantBuffers(1, 1, &pCBStageScene_);//頂点シェーダー
     Direct3D::pContext_->PSSetConstantBuffers(1, 1, &pCBStageScene_);//ピクセルシェーダー
+
+    XMFLOAT4 LightPos = GetLightPos();
+    XMFLOAT4 Margin   = { 0,0,0,0 };
+
+    if (Input::IsKey(DIK_UP))
+    {
+        Margin = { LightPos.x,LightPos.y + 0.1f,LightPos.z,LightPos.w};
+
+        SetLightPos(Margin);
+    }
+
+    if (Input::IsKey(DIK_DOWN))
+    {
+        Margin = { LightPos.x,LightPos.y - 0.1f,LightPos.z,LightPos.w };
+
+        SetLightPos(Margin);
+    }
+
+    if (Input::IsKey(DIK_LEFT))
+    {
+        Margin = { LightPos.x - 0.1f,LightPos.y,LightPos.z,LightPos.w };
+
+        SetLightPos(Margin);
+    }
+
+    if (Input::IsKey(DIK_RIGHT))
+    {
+        Margin = { LightPos.x + 0.1f,LightPos.y,LightPos.z,LightPos.w };
+
+        SetLightPos(Margin);
+    }
+
+    if (Input::IsKey(DIK_W))
+    {
+        Margin = { LightPos.x,LightPos.y,LightPos.z + 0.1f,LightPos.w };
+
+        SetLightPos(Margin);
+    }
+
+    if (Input::IsKey(DIK_S))
+    {
+        Margin = { LightPos.x,LightPos.y,LightPos.z - 0.1f,LightPos.w };
+
+        SetLightPos(Margin);
+    }
 }
 
 //描画
