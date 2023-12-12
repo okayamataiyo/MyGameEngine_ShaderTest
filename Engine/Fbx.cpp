@@ -7,7 +7,7 @@
 using namespace DirectX;
 using namespace Camera;
 
-const XMFLOAT4 LIGHT_DIRECTION{1,5,0,1};
+const XMFLOAT4 LIGHT_DIRECTION{1,1,1,0};
 
 
 Fbx::Fbx()
@@ -188,10 +188,10 @@ void Fbx::InitIndex(fbxsdk::FbxMesh* mesh)
 void Fbx::InitConstantBuffer()
 {
     D3D11_BUFFER_DESC cb;
-    cb.ByteWidth = sizeof(CONSTANT_BUFFER);
-    cb.Usage = D3D11_USAGE_DYNAMIC;
+    cb.ByteWidth = sizeof(CONSTANT_BUFFER_MODEL);
+    cb.Usage = D3D11_USAGE_DEFAULT;
     cb.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-    cb.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+    cb.CPUAccessFlags = 0;
     cb.MiscFlags = 0;
     cb.StructureByteStride = 0;
 
@@ -263,33 +263,32 @@ void Fbx::Draw(Transform& transform)
     for (int i = 0; i < materialCount_; i++) {
 
         //コンスタントバッファに情報を渡す
-        CONSTANT_BUFFER cb;
+        CONSTANT_BUFFER_MODEL cb;
         cb.matWVP = XMMatrixTranspose(transform.GetWorldMatrix() * Camera::GetViewMatrix() * Camera::GetProjectionMatrix());
         cb.matNormal = XMMatrixTranspose(transform.GetNormalMatrix());
+        cb.matW = XMMatrixTranspose(transform.GetNormalMatrix());
         cb.diffuseColor = pMaterialList_[i].diffuse;
-        cb.lightDirection = LIGHT_DIRECTION;
-        XMStoreFloat4(&cb.eyePos,Camera::GetEyePosition());
         cb.isTextured = pMaterialList_[i].pTexture != nullptr;
 
+        Direct3D::pContext_->UpdateSubresource(pConstantBuffer_, 0, NULL, &cb, 0, 0);
 
-
-        if (i == 1) {
+        /*if (i == 1) {
             cb.diffuseColor = XMFLOAT4(1, 0, 0, 1);
             cb.isTextured = pMaterialList_[i].pTexture != nullptr;
         }
         else {
             cb.diffuseColor = pMaterialList_[i].diffuse;
             cb.isTextured = pMaterialList_[i].pTexture != nullptr;
-        }
+        }*/
 
 //        cb.diffuseColor = pMaterialList_[i].diffuse;
 //        cb.isTextured = pMaterialList_[i].pTexture != nullptr;
 
-        D3D11_MAPPED_SUBRESOURCE pdata;
-        Direct3D::pContext_->Map(pConstantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata);	// GPUからのデータアクセスを止める
-        memcpy_s(pdata.pData, pdata.RowPitch, (void*)(&cb), sizeof(cb));	// データを値を送る
+        //D3D11_MAPPED_SUBRESOURCE pdata;
+        //Direct3D::pContext_->Map(pConstantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata);	// GPUからのデータアクセスを止める
+        //memcpy_s(pdata.pData, pdata.RowPitch, (void*)(&cb), sizeof(cb));	// データを値を送る
 
-        Direct3D::pContext_->Unmap(pConstantBuffer_, 0);	//再開
+        //Direct3D::pContext_->Unmap(pConstantBuffer_, 0);	//再開
 
         //頂点バッファ、インデックスバッファ、コンスタントバッファをパイプラインにセット
 
@@ -318,9 +317,6 @@ void Fbx::Draw(Transform& transform)
         //頂点バッファ、インデックスバッファ、コンスタントバッファをパイプラインにセット
         /*UINT stride = sizeof(VERTEX);
         UINT offset = 0;*/
-
-
-       
 
         if (pMaterialList_[i].pTexture)
         {
