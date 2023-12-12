@@ -6,6 +6,7 @@
 Transform trans_G;
 Transform trans_A;
 Transform trans_B;
+
 namespace 
 {
     const XMFLOAT4 DEF_LIGHT_POSITION{ 1,2,1,0 };
@@ -69,12 +70,13 @@ void Stage::Initialize()
 void Stage::Update()
 {
     trans_A.rotate_.z = 90;
+    trans_A.scale_.y = 0.4;
     trans_A.position_.y = 0.5;
     trans_G.position_.y = 0;
     trans_B.position_.x = 2;
     trans_B.position_.z = 2;
     trans_B.position_.y = 1;
-    trans_B.rotate_.y += 0.5;
+    //trans_B.rotate_.y += 0.5;
 
     CBUFF_STAGESCENE cb;
     cb.lightPosition = lightSourcePosition_;
@@ -91,7 +93,7 @@ void Stage::Draw()
     Model::Draw(hModel_[0]);
 
     Model::SetTransform(hModel_[1], trans_G);
-    Model::Draw(hModel_[1]);
+    //Model::Draw(hModel_[1]);
 
     Model::SetTransform(hModel_[2], trans_B);
     Model::Draw(hModel_[2]);

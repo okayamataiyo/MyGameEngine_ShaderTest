@@ -188,7 +188,7 @@ void Fbx::InitIndex(fbxsdk::FbxMesh* mesh)
 void Fbx::InitConstantBuffer()
 {
     D3D11_BUFFER_DESC cb;
-    cb.ByteWidth = sizeof(CONSTANT_BUFFER);
+    cb.ByteWidth = sizeof(CONSTANT_BUFFER_MODEL);
     cb.Usage = D3D11_USAGE_DEFAULT;
     cb.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
     cb.CPUAccessFlags = 0;
@@ -263,13 +263,11 @@ void Fbx::Draw(Transform& transform)
     for (int i = 0; i < materialCount_; i++) {
 
         //コンスタントバッファに情報を渡す
-        CONSTANT_BUFFER cb;
+        CONSTANT_BUFFER_MODEL cb;
         cb.matWVP = XMMatrixTranspose(transform.GetWorldMatrix() * Camera::GetViewMatrix() * Camera::GetProjectionMatrix());
         cb.matNormal = XMMatrixTranspose(transform.GetNormalMatrix());
         cb.matW = XMMatrixTranspose(transform.GetNormalMatrix());
         cb.diffuseColor = pMaterialList_[i].diffuse;
-        //cb.lightPosition = LIGHT_DIRECTION;
-        //XMStoreFloat4(&cb.eyePosition,Camera::GetEyePosition());
         cb.isTextured = pMaterialList_[i].pTexture != nullptr;
 
         Direct3D::pContext_->UpdateSubresource(pConstantBuffer_, 0, NULL, &cb, 0, 0);

@@ -23,13 +23,11 @@ class Fbx
 	};
 
 	//コンスタントバッファー
-	struct CONSTANT_BUFFER {
-		XMMATRIX matWVP;			//mvp
-		XMMATRIX matW;
+	struct CONSTANT_BUFFER_MODEL {
+		XMMATRIX matWVP;			//wvp
+		XMMATRIX matW;				//wvp
 		XMMATRIX matNormal;			//ワールド変換だけのやつ
 		XMFLOAT4 diffuseColor;		//面の色
-		//XMFLOAT4 lightPosition;		//光の視点
-		//XMFLOAT4 eyePosition;		//目の視点
 		BOOL isTextured;
 	};
 

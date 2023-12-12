@@ -12,9 +12,9 @@ class Stage : public GameObject
 {
     int hModel_[3];    //モデル番号
     ID3D11Buffer* pCBStageScene_;
+    XMFLOAT4 lightSourcePosition_;
 
     void IntConstantBuffer();
-    XMFLOAT4 lightSourcePosition_;
 public:
     //コンストラクタ
     //引数:parent 親オブジェクト(SceneManager)
