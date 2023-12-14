@@ -7,8 +7,11 @@ cbuffer gmodel:register(b0) //オブジェクトに関係あるやつ
 	float4x4 matWVP;
 	float4x4 matW;
 	float4x4 matNormal;
-	float4   diffuseColor;
-	bool     isTextured;
+	float4   diffuseColor;		//マテリアルの色＝拡散反射係数
+	float4   ambientColor;		//環境光
+	float4   specularColor;		//鏡面反射＝ハイライト
+	float	 shineness;
+	bool     isTextured;		//テクスチャーが貼られているかどうか
 }
 
 cbuffer gmodel:register(b1)	//オブジェクトに関係ないやつ
@@ -78,12 +81,12 @@ VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD, float4 normal : NORMAL)
 float4 PS(VS_OUT inData) : SV_Target
 {
 	float4 lightSource = float4(1.0, 1.0, 1.0, 1.0);
-	float4 ambientSource = float4(0.2, 0.2, 0.2, 1.0);
+	float4 ambientSource = ambientColor;
 	float4 diffuse;// = lightsource * g_texture.sample(g_sampler, indata.uv) * indata.color;
 	float4 ambient;// = lightsource * g_texture.sample(g_sampler, indata.uv) * ambientsource;
 	float4 NL = saturate(dot(inData.normal, normalize(lightPosition)));
 	float4 reflect = normalize(2 * NL * inData.normal - normalize(lightPosition));
-	float4 specular = pow(saturate(dot(reflect, normalize(inData.eyev))), 8);
+	float4 specular = pow(saturate(dot(reflect, normalize(inData.eyev))), shineness) * specularColor;
 
 	if (isTextured == false) {
 		diffuse = lightSource * diffuseColor * inData.color;
@@ -95,6 +98,6 @@ float4 PS(VS_OUT inData) : SV_Target
 	}
 	//return g_texture.sample(g_sampler, indata.uv);// (diffuse + ambient);
 	return diffuse + ambient + specular;
-	//float4 output = g_texture.Sample(g_sampler, inData.uv);
+		//float4 output = g_texture.Sample(g_sampler, inData.uv);
 	//return output;
 }

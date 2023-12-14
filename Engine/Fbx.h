@@ -20,6 +20,9 @@ class Fbx
 	{
 		Texture* pTexture;
 		XMFLOAT4 diffuse;
+		XMFLOAT4 ambient;
+		XMFLOAT4 specular;
+		float shineness;
 	};
 
 	//コンスタントバッファー
@@ -28,6 +31,9 @@ class Fbx
 		XMMATRIX matW;				//wvp
 		XMMATRIX matNormal;			//ワールド変換だけのやつ
 		XMFLOAT4 diffuseColor;		//面の色
+		XMFLOAT4 ambientColor;
+		XMFLOAT4 specularColor;
+		float  shineness;
 		BOOL isTextured;
 	};
 

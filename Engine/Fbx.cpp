@@ -214,13 +214,23 @@ void Fbx::InitMaterial(fbxsdk::FbxNode* pNode)
     {
         //i番目のマテリアル情報を取得
         FbxSurfacePhong* pMaterial = (FbxSurfacePhong*)(pNode->GetMaterial(i));
+        FbxSurfacePhong* pPhong = (FbxSurfacePhong*)pMaterial;
         FbxDouble3 diffuse = pMaterial->Diffuse;
         FbxDouble3 ambient = pMaterial->Ambient;    //XMFLOAT4
 
+        pMaterialList_[i].diffuse = XMFLOAT4((float)diffuse[0], (float)diffuse[1], (float)diffuse[2], 1.0f);
+        pMaterialList_[i].ambient = XMFLOAT4((float)ambient[0], (float)ambient[1], (float)ambient[2], 1.0f);
+        pMaterialList_[i].specular = XMFLOAT4(0, 0, 0, 0);   //とりあえずハイライトは黒
+        pMaterialList_[i].shineness = 1;
+
         if (pMaterial->GetClassId().Is(FbxSurfacePhong::ClassId))
         {
-            FbxDouble3 specular = pMaterial->Specular;
-            FbxDouble shiness = pMaterial->Shininess;
+            //Mayaで指定したSpecularColorの情報
+            FbxDouble3 specular = pPhong->Specular;
+            pMaterialList_[i].specular = XMFLOAT4((float)specular[0], (float)specular[1], (float)specular[2], 1.0f);
+
+            FbxDouble shineness = pPhong->Shininess;
+            pMaterialList_[i].shineness = (float)pPhong->Shininess;
         }
 
         pMaterialList_[i].diffuse = XMFLOAT4{ (float)diffuse[0],(float)diffuse[1] ,(float)diffuse[2] ,1.0};
@@ -254,8 +264,6 @@ void Fbx::InitMaterial(fbxsdk::FbxNode* pNode)
             pMaterialList_[i].pTexture = nullptr;
             //マテリアルの色
             FbxSurfaceLambert* pMaterial = (FbxSurfaceLambert*)pNode->GetMaterial(i);
-            FbxDouble3 diffuse = pMaterial->Diffuse;
-            pMaterialList_[i].diffuse = XMFLOAT4((float)diffuse[0], (float)diffuse[1], (float)diffuse[2], 1.0f);
         }
 
 
@@ -277,6 +285,9 @@ void Fbx::Draw(Transform& transform)
         cb.matNormal = XMMatrixTranspose(transform.GetNormalMatrix());
         cb.matW = XMMatrixTranspose(transform.GetNormalMatrix());
         cb.diffuseColor = pMaterialList_[i].diffuse;
+        cb.ambientColor = pMaterialList_[i].diffuse;
+        cb.specularColor = pMaterialList_[i].diffuse;
+        cb.shineness = pMaterialList_[i].shineness;
         cb.isTextured = pMaterialList_[i].pTexture != nullptr;
 
         Direct3D::pContext_->UpdateSubresource(pConstantBuffer_, 0, NULL, &cb, 0, 0);
