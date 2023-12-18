@@ -65,7 +65,7 @@ void Stage::Initialize()
     assert(hModel_[2] >= 0);
 
 
-    hModel_[3] = Model::Load("Assets/Ball.fbx");
+    hModel_[3] = Model::Load("Assets/Pipe.fbx");
     assert(hModel_[3] >= 0);
 
     IntConstantBuffer();
