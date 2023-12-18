@@ -8,6 +8,7 @@
 Transform trans_G;
 Transform trans_A;
 Transform trans_B;
+Transform trans_L;
 
 namespace 
 {
@@ -37,7 +38,7 @@ void Stage::IntConstantBuffer()
 
 //コンストラクタ
 Stage::Stage(GameObject* parent)
-    :GameObject(parent, "Stage"),hModel_{-1, -1, 0},lightSourcePosition_(DEF_LIGHT_POSITION)
+    :GameObject(parent, "Stage"),hModel_{-1, -1, -1,-1},lightSourcePosition_(DEF_LIGHT_POSITION)
 {
     Sprite* s;
 
@@ -57,13 +58,15 @@ void Stage::Initialize()
     hModel_[0] = Model::Load("Assets/Arrow.fbx");
     assert(hModel_[0] >= 0);
 
-    //モデルデータのロード
     hModel_[1] = Model::Load("Assets/Ground.fbx");
     assert(hModel_[1] >= 0);
 
-    //モデルデータのロード
     hModel_[2] = Model::Load("Assets/BallNormal02.fbx");
     assert(hModel_[2] >= 0);
+
+
+    hModel_[3] = Model::Load("Assets/Ball.fbx");
+    assert(hModel_[3] >= 0);
 
     IntConstantBuffer();
 }
@@ -78,6 +81,7 @@ void Stage::Update()
     trans_B.position_.x = 2;
     trans_B.position_.z = 2;
     trans_B.position_.y = 1;
+    trans_L.scale_ = { 0.2,0.2,0.2 };
     //trans_B.rotate_.y += 0.5;
 
     CBUFF_STAGESCENE cb;
@@ -87,50 +91,54 @@ void Stage::Update()
     Direct3D::pContext_->VSSetConstantBuffers(1, 1, &pCBStageScene_);//頂点シェーダー
     Direct3D::pContext_->PSSetConstantBuffers(1, 1, &pCBStageScene_);//ピクセルシェーダー
 
-    XMFLOAT4 LightPos = GetLightPos();
+    XMFLOAT4 LightPos = { 0,0,0,0 };
     XMFLOAT4 Margin   = { 0,0,0,0 };
 
     if (Input::IsKey(DIK_UP))
     {
+        LightPos = GetLightPos();
         Margin = { LightPos.x,LightPos.y + 0.1f,LightPos.z,LightPos.w};
-
         SetLightPos(Margin);
     }
-
     if (Input::IsKey(DIK_DOWN))
     {
+        LightPos = GetLightPos();
         Margin = { LightPos.x,LightPos.y - 0.1f,LightPos.z,LightPos.w };
-
-        SetLightPos(Margin);
-    }
-
-    if (Input::IsKey(DIK_LEFT))
-    {
-        Margin = { LightPos.x - 0.1f,LightPos.y,LightPos.z,LightPos.w };
-
         SetLightPos(Margin);
     }
 
     if (Input::IsKey(DIK_RIGHT))
     {
+        LightPos = GetLightPos();
         Margin = { LightPos.x + 0.1f,LightPos.y,LightPos.z,LightPos.w };
-
+        SetLightPos(Margin);
+    }
+    if (Input::IsKey(DIK_LEFT))
+    {
+        LightPos = GetLightPos();
+        Margin = { LightPos.x - 0.1f,LightPos.y,LightPos.z,LightPos.w };
         SetLightPos(Margin);
     }
 
+
+
     if (Input::IsKey(DIK_W))
     {
+        LightPos = GetLightPos();
         Margin = { LightPos.x,LightPos.y,LightPos.z + 0.1f,LightPos.w };
-
         SetLightPos(Margin);
     }
 
     if (Input::IsKey(DIK_S))
     {
+        LightPos = GetLightPos();
         Margin = { LightPos.x,LightPos.y,LightPos.z - 0.1f,LightPos.w };
-
         SetLightPos(Margin);
     }
+
+    XMFLOAT4 tmp{ GetLightPos() };
+    trans_L.position_ = { tmp.x,tmp.y,tmp.z };
+
 }
 
 //描画
@@ -139,11 +147,14 @@ void Stage::Draw()
     Model::SetTransform(hModel_[0], trans_A);
     Model::Draw(hModel_[0]);
 
-    Model::SetTransform(hModel_[1], trans_G);
+    //Model::SetTransform(hModel_[1], trans_G);
     //Model::Draw(hModel_[1]);
 
     Model::SetTransform(hModel_[2], trans_B);
     Model::Draw(hModel_[2]);
+
+    Model::SetTransform(hModel_[3], trans_L);
+    Model::Draw(hModel_[3]);
 }
 
 //開放
