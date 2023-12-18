@@ -214,6 +214,7 @@ void Fbx::InitMaterial(fbxsdk::FbxNode* pNode)
     {
         //i”Ô–Ú‚Ìƒ}ƒeƒŠƒAƒ‹î•ñ‚ðŽæ“¾
         FbxSurfacePhong* pMaterial = (FbxSurfacePhong*)(pNode->GetMaterial(i));
+        //FbxSurfaceMaterial* pMaterial = pNode->GetMaterial(i);
         FbxSurfacePhong* pPhong = (FbxSurfacePhong*)pMaterial;
         FbxDouble3 diffuse = pMaterial->Diffuse;
         FbxDouble3 ambient = pMaterial->Ambient;    //XMFLOAT4
