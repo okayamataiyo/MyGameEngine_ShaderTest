@@ -82,13 +82,15 @@ VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD, float4 normal : NORMAL)
 float4 PS(VS_OUT inData) : SV_Target
 {
 	float4 lightSource = float4(1.0, 1.0, 1.0, 1.0);
-	float4 ambientSource = ambientColor;
+	//float4 ambientSource = ambientColor;
 	float4 diffuse;// = lightsource * g_texture.sample(g_sampler, indata.uv) * indata.color;
 	float4 ambient;// = lightsource * g_texture.sample(g_sampler, indata.uv) * ambientsource;
 	float4 NL = saturate(dot(inData.normal, normalize(lightPosition)));
 	//float4 reflect = normalize(2 * NL * inData.normal - normalize(lightPosition));
 	float4 reflection = reflect(normalize(-lightPosition), inData.normal);
 	float4 specular = pow(saturate(dot(reflection, normalize(inData.eyev))), shineness) * specularColor;
+	//float4 specular = pow(saturate(dot(reflection, normalize(inData.eyev))), 8);
+	float2 uv;
 
 	//Ç±ÇÃï”Ç≈ägéUîΩéÀÇÃílÇÇ≤Ç…ÇÂÇ≤Ç…ÇÂÇ∑ÇÈ
 	/*float4 n1 = float4(1 / 4.0, 1 / 4.0, 1 / 4.0, 1);
@@ -99,20 +101,31 @@ float4 PS(VS_OUT inData) : SV_Target
 	//float4 tI = 0.1 * step(n1, inData.color) + 0.3 * step(n2, inData.color)
 	//	+ 0.3 * step(n3, inData.color) + 0.4 * step(n4, inData.color);
 
-	float2 uv;
 	uv.x = inData.color.x;
 	uv.y = 0.0f;
-	return g_toon_texture.Sample(g_sampler, uv);
 
-	//if (isTextured == false) {
-	//	diffuse = lightSource * diffuseColor * inData.color;
-	//	ambient = lightSource * diffuseColor * ambientSource;
-	//}
-	//else {
-	//	//diffuse = lightSource * g_texture.Sample(g_sampler, inData.uv) * inData.color;
-	//	diffuse = lightSource * g_texture.Sample(g_sampler, inData.uv);
-	//	ambient = lightSource * g_texture.Sample(g_sampler, inData.uv) * ambientSource;
-	//}
+	float4 tI = g_toon_texture.Sample(g_sampler, uv);
+
+	if (isTextured == false) {
+		//diffuse = lightSource * diffuseColor * inData.color;
+		diffuse = lightSource * diffuseColor * tI;
+		ambient = lightSource * diffuseColor * ambientColor;
+	}
+	else {
+		diffuse = lightSource * g_texture.Sample(g_sampler, inData.uv) * tI;
+		//diffuse = lightSource * g_texture.Sample(g_sampler, inData.uv) * inData.Color;
+		ambient = lightSource * g_texture.Sample(g_sampler, inData.uv) * ambientColor;
+	}
+
+	//return g_toon_texture.Sample(g_sampler, uv);
 	//return diffuse + ambient + specular;
-	//return tI;
+	//ó÷äsÅÅéãê¸ÉxÉNÉgÉãÇ∆ñ ÇÃñ@ê¸ÇÃäpìxÇ™ÇXÇOìxïtãﬂ
+	if (abs(dot(inData.normal, normalize(inData.eyev))) < 0.3)
+	{
+		return float4(0, 0, 0, 0);
+	}
+	else
+	{
+		return float4(1, 1, 1, 0);
+	}
 }
