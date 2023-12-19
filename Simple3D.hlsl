@@ -34,6 +34,7 @@ cbuffer gmodel:register(b1)	//オブジェクトに関係ないやつ
 //───────────────────────────────────────
 Texture2D		g_texture : register(t0);	//テクスチャー
 SamplerState	g_sampler : register(s0);	//サンプラー
+Texture2D		g_toon_texture : register(t1);
 
 //───────────────────────────────────────
 // 頂点シェーダー出力＆ピクセルシェーダー入力データ構造体
@@ -90,22 +91,28 @@ float4 PS(VS_OUT inData) : SV_Target
 	float4 specular = pow(saturate(dot(reflection, normalize(inData.eyev))), shineness) * specularColor;
 
 	//この辺で拡散反射の値をごにょごにょする
-	float4 n1 = float4(1 / 4.0, 1 / 4.0, 1 / 4.0, 1);
+	/*float4 n1 = float4(1 / 4.0, 1 / 4.0, 1 / 4.0, 1);
 	float4 n2 = float4(2 / 4.0, 2 / 4.0, 2 / 4.0, 1);
 	float4 n3 = float4(3 / 4.0, 3 / 4.0, 3 / 4.0, 1);
-	float4 n4 = float4(4 / 4.0, 4 / 4.0, 4 / 4.0, 1);
+	float4 n4 = float4(4 / 4.0, 4 / 4.0, 4 / 4.0, 1);*/
 
-	float4 tI = 0.1 * step(n1, inData.color) + 0.3 * step(n2, inData.color)
-		+ 0.3 * step(n3, inData.color) + 0.4 * step(n4, inData.color);
+	//float4 tI = 0.1 * step(n1, inData.color) + 0.3 * step(n2, inData.color)
+	//	+ 0.3 * step(n3, inData.color) + 0.4 * step(n4, inData.color);
 
-	if (isTextured == false) {
-		diffuse = lightSource * diffuseColor * inData.color;
-		ambient = lightSource * diffuseColor * ambientSource;
-	}
-	else {
-		diffuse = lightSource * g_texture.Sample(g_sampler, inData.uv) * inData.color;
-		ambient = lightSource * g_texture.Sample(g_sampler, inData.uv) * ambientSource;
-	}
-	return diffuse + ambient + specular;
+	float2 uv;
+	uv.x = inData.color.x;
+	uv.y = 0.0f;
+	return g_toon_texture.Sample(g_sampler, uv);
+
+	//if (isTextured == false) {
+	//	diffuse = lightSource * diffuseColor * inData.color;
+	//	ambient = lightSource * diffuseColor * ambientSource;
+	//}
+	//else {
+	//	//diffuse = lightSource * g_texture.Sample(g_sampler, inData.uv) * inData.color;
+	//	diffuse = lightSource * g_texture.Sample(g_sampler, inData.uv);
+	//	ambient = lightSource * g_texture.Sample(g_sampler, inData.uv) * ambientSource;
+	//}
+	//return diffuse + ambient + specular;
 	//return tI;
 }

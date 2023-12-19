@@ -65,7 +65,7 @@ void Stage::Initialize()
     assert(hModel_[2] >= 0);
 
 
-    hModel_[3] = Model::Load("Assets/Pipe.fbx");
+    hModel_[3] = Model::Load("Assets/Ball.fbx");
     assert(hModel_[3] >= 0);
 
     IntConstantBuffer();
@@ -134,6 +134,16 @@ void Stage::Update()
         LightPos = GetLightPos();
         Margin = { LightPos.x,LightPos.y,LightPos.z - 0.1f,LightPos.w };
         SetLightPos(Margin);
+    }
+
+    if (Input::IsKey(DIK_A))
+    {
+        trans_L.rotate_.z += 15.0f;
+    }
+
+    if (Input::IsKey(DIK_D))
+    {
+        trans_L.rotate_.z -= 15.0f * 1.1;
     }
 
     XMFLOAT4 tmp{ GetLightPos() };
