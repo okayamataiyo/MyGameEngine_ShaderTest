@@ -81,6 +81,7 @@ void Stage::Update()
     trans_B.position_.x = 2;
     trans_B.position_.z = 2;
     trans_B.position_.y = 1;
+    trans_B.rotate_.y += 1;
     trans_L.scale_ = { 0.2,0.2,0.2 };
     //trans_B.rotate_.y += 0.5;
 
@@ -134,6 +135,16 @@ void Stage::Update()
         LightPos = GetLightPos();
         Margin = { LightPos.x,LightPos.y,LightPos.z - 0.1f,LightPos.w };
         SetLightPos(Margin);
+    }
+
+    if (Input::IsMouseButton(0))
+    {
+        trans_L.rotate_.y += 1.0f;
+    }
+
+    if (Input::IsMouseButton(1))
+    {
+        trans_L.rotate_.y -= 1.0f;
     }
 
     XMFLOAT4 tmp{ GetLightPos() };
