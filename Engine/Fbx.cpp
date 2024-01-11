@@ -9,7 +9,6 @@ using namespace Camera;
 
 const XMFLOAT4 LIGHT_DIRECTION{1,1,1,0};
 
-
 Fbx::Fbx()
     :vertexCount_(0),polygonCount_(0),materialCount_(0),
     pVertexBuffer_(nullptr),pIndexBuffer_(nullptr),pConstantBuffer_(nullptr),
@@ -195,8 +194,6 @@ void Fbx::InitConstantBuffer()
     cb.MiscFlags = 0;
     cb.StructureByteStride = 0;
 
-
-
     // コンスタントバッファの作成
     HRESULT hr;
     hr = Direct3D::pDevice_->CreateBuffer(&cb, nullptr, &pConstantBuffer_);
@@ -274,11 +271,10 @@ void Fbx::InitMaterial(fbxsdk::FbxNode* pNode)
 //テクスチャをロード
 void Fbx::Draw(Transform& transform)
 {
+    Direct3D::SetShader(SHADER_TOON);
     Direct3D::SetShader(SHADER_TOONOUTLINE);
-    //Direct3D::SetShader(SHADER_TOON);
     transform.Calclation();//トランスフォームを計算
     
-
     for (int i = 0; i < materialCount_; i++) {
 
         //コンスタントバッファに情報を渡す
@@ -358,3 +354,7 @@ void Fbx::Release()
 {
 
 }
+
+
+
+

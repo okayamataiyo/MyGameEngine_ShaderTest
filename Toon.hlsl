@@ -98,11 +98,13 @@ float4 PS(VS_OUT inData) : SV_Target
 	float4 tI = 0.1 * step(n1, inData.color) + 0.3 * step(n2, inData.color)
 		+ 0.3 * step(n3, inData.color) + 0.4 * step(n4, inData.color);
 
-	if (isTextured == false) {
+	if (isTextured == false) 
+	{
 		diffuse = lightSource * diffuseColor * inData.color;
 		ambient = lightSource * diffuseColor * ambientSource;
 	}
-	else {
+	else
+	{
 		diffuse = lightSource * g_texture.Sample(g_sampler, inData.uv) * inData.color;
 		ambient = lightSource * g_texture.Sample(g_sampler, inData.uv) * ambientSource;
 	}
