@@ -69,6 +69,7 @@ public:
 	void SetFlagColor(XMFLOAT4 col);
 	HRESULT Load(std::string fileName);
 	void Draw(Transform& transform);
+	void DrawToon(Transform& transform);
 	void Release();
 };
 

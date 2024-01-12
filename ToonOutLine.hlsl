@@ -73,6 +73,13 @@ VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD, float4 normal : NORMAL)
 	outData.eyev = eyePosition - posw;
 
 	//Ç‹Ç∆ÇﬂÇƒèoóÕ
+	//return outData;
+
+	VS_OUT outdata;
+	normal.w = 0;
+	pos = pos + normal * 0.03f;
+	outData.pos = mul(pos, matWVP);
+
 	return outData;
 }
 
@@ -108,5 +115,6 @@ float4 PS(VS_OUT inData) : SV_Target
 		ambient = lightSource * g_texture.Sample(g_sampler, inData.uv) * ambientSource;
 	}
 	//return diffuse + ambient + specular;
-	return specular;
+	//return specular;
+	return  float4(0, 0, 0, 1);
 }
