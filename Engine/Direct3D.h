@@ -2,7 +2,6 @@
 #include <d3d11.h>
 #include <DirectXMath.h>
 
-
 //ƒŠƒ“ƒJ
 #pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "d3dcompiler.lib")
@@ -12,13 +11,13 @@
 
 using namespace DirectX;
 
-
 enum SHADER_TYPE
 {
 	SHADER_2D,
 	SHADER_3D,
 	SHADER_TOON,
 	SHADER_TOONOUTLINE,
+	SHADER_NORMALMAP,
 	SHADER_MAX,
 };
 
@@ -36,6 +35,7 @@ namespace Direct3D
 	HRESULT InitShader2D();
 	HRESULT InitShaderToon();
 	HRESULT InitShaderToonOutLine();
+	HRESULT InitShaderNormalMap();
 
 	void SetShader(SHADER_TYPE type);
 
