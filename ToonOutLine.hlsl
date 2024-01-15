@@ -50,37 +50,18 @@ struct VS_OUT
 //───────────────────────────────────────
 // 頂点シェーダ
 //───────────────────────────────────────
-VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD, float4 normal : NORMAL)
+float4 VS(float4 pos : POSITION, float4 uv : TEXCOORD, float4 normal : NORMAL):SV_POSITION
 {
 	//ピクセルシェーダーへ渡す情報
-	VS_OUT outData = (VS_OUT)0;
+	//VS_OUT outData = (VS_OUT)0;
 
 	//ローカル座標に、ワールド・ビュー・プロジェクション行列をかけて
 	//スクリーン座標に変換し、ピクセルシェーダーへ
-	pos = pos + normal * 0.05;
-	outData.pos = mul(pos, matWVP);
-	outData.uv = uv;
-	normal.w = 0;
-	normal = mul(normal, matNormal);
-	normal = normalize(normal);
-	outData.normal = normal;
-
-	float4 light = normalize(lightPosition);
-	light = normalize(light);
-
-	outData.color = saturate(dot(normal, light));
-	float4 posw = mul(pos, matW);
-	outData.eyev = eyePosition - posw;
-
-	//まとめて出力
-	//return outData;
-
-	VS_OUT outdata;
 	normal.w = 0;
 	pos = pos + normal * 0.03f;
-	outData.pos = mul(pos, matWVP);
+	pos = mul(pos, matWVP);
 
-	return outData;
+	return pos;
 }
 
 //───────────────────────────────────────
