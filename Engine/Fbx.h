@@ -19,7 +19,7 @@ class Fbx
 	struct MATERIAL
 	{
 		Texture* pTexture;
-		Texture* pNormalTexture;
+		Texture* pNormalMap;
 		XMFLOAT4 diffuse;
 		XMFLOAT4 ambient;
 		XMFLOAT4 specular;
@@ -36,6 +36,7 @@ class Fbx
 		XMFLOAT4 specularColor;
 		float  shineness;
 		BOOL isTextured;
+		BOOL isNormalMap;
 	};
 
 	//頂点情報
@@ -43,7 +44,7 @@ class Fbx
 		XMVECTOR position;			//頂点数
 		XMVECTOR uv;				//ポリゴン数
 		XMVECTOR normal;			//マテリアルの個数
-		XMVECTOR tangent;			//接戦
+		XMVECTOR tangent;			//接線ベクトル
 	};
 
 	int vertexCount_;				//頂点数	FBXファイルを扱うために必要になる変数を宣言する。

@@ -100,31 +100,24 @@ void Fbx::InitVertex(fbxsdk::FbxMesh* mesh)
         }
     }
 
+    FbxGeometryElementTangent* t = mesh->GetElementTangent(0);
+    //タンジェント取得
     for (int i = 0; i < polygonCount_; i++)
     {
-        mesh->GetElementTangentCount();//これが0なんだなぁ
-        int sIndex = mesh->GetPolygonVertexIndex(i);
-        FbxGeometryElementTangent* t = mesh->GetElementTangent(0);
-        if (t != nullptr)
+        int startIndex = mesh->GetPolygonVertexIndex(i);//これが0なんだなぁ
+        FbxVector4 tangent{ 0,0,0,0 };
+        if (t)
         {
-            FbxVector4 tangent = t->GetDirectArray().GetAt(sIndex).mData;
-            for (int j = 0; j < 3; j++)
-            {
-                int index = mesh->GetPolygonVertices()[sIndex + j];
-                vertices[index].tangent
-                    = { (float)tangent[0], (float)tangent[1], (float)tangent[2], (float)tangent[3] };
-            }
+            tangent = t->GetDirectArray().GetAt(startIndex).mData;
         }
-        else
+
+        for (int j = 0; j < 3; j++)
         {
-            for (int j = 0; j < 3; j++)
-            {
-                int index = mesh->GetPolygonVertices()[sIndex + j];
-                vertices[index].tangent
-                    = { 0.0f,0.0f,0.0f,0.0f };
-            }
+            int index = mesh->GetPolygonVertices()[startIndex + j];
+            vertices[index].tangent
+                = XMVectorSet((float)tangent[0], (float)tangent[1], (float)tangent[2], 0.0f);
         }
-}
+    }
 
     // 頂点バッファ作成
     HRESULT hr;
@@ -293,7 +286,7 @@ void Fbx::InitMaterial(fbxsdk::FbxNode* pNode)
 
         ///ノーマルマップ用テクスチャ
         //テクスチャ情報
-        lProperty = pMaterial->FindProperty(FbxSurfaceMaterial::sNormalMap);
+        lProperty = pMaterial->FindProperty(FbxSurfaceMaterial::sBump);
 
         //テクスチャの数数
         fileTextureCount = lProperty.GetSrcObjectCount<FbxFileTexture>();
@@ -311,17 +304,15 @@ void Fbx::InitMaterial(fbxsdk::FbxNode* pNode)
             wsprintf(name, "%s%s", name, ext);
 
             //ファイルからテクスチャ作成
-            pMaterialList_[i].pNormalTexture = new Texture;
-            HRESULT hr = pMaterialList_[i].pNormalTexture->Load(name);
+            pMaterialList_[i].pNormalMap = new Texture;
+            HRESULT hr = pMaterialList_[i].pNormalMap->Load(name);
             assert(hr == S_OK);
         }
 
         //テクスチャ無し
         else
         {
-            pMaterialList_[i].pNormalTexture = nullptr;
-            //マテリアルの色
-            FbxSurfaceLambert* pMaterial = (FbxSurfaceLambert*)pNode->GetMaterial(i);
+            pMaterialList_[i].pNormalMap = nullptr;
         }
     }
 }
@@ -349,6 +340,7 @@ void Fbx::Draw(Transform& transform)
         cb.specularColor = pMaterialList_[i].diffuse;
         cb.shineness = pMaterialList_[i].shineness;
         cb.isTextured = pMaterialList_[i].pTexture != nullptr;
+        cb.isNormalMap = pMaterialList_[i].pNormalMap != nullptr;
 
         Direct3D::pContext_->UpdateSubresource(pConstantBuffer_, 0, NULL, &cb, 0, 0);
 
@@ -406,10 +398,11 @@ void Fbx::Draw(Transform& transform)
             ID3D11ShaderResourceView* pSRV = pMaterialList_[i].pTexture->GetSRV();
             Direct3D::pContext_->PSSetShaderResources(0, 1, &pSRV);
         }
-        if (pMaterialList_[i].pNormalTexture)
+
+        if (pMaterialList_[i].pNormalMap)
         {
-            ID3D11ShaderResourceView* pSRV = pMaterialList_[i].pNormalTexture->GetSRV();
-            Direct3D::pContext_->PSSetShaderResources(2, 1, &pSRV);
+            ID3D11ShaderResourceView* pSRV = pMaterialList_[i].pNormalMap->GetSRV();
+            Direct3D::pContext_->PSSetShaderResources(1, 1, &pSRV);
         }
 
         //ID3D11ShaderResourceView* pSRVTooon = pToonTex_->GetSRV();
