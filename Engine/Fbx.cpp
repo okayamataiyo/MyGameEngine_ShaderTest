@@ -320,12 +320,12 @@ void Fbx::InitMaterial(fbxsdk::FbxNode* pNode)
 //テクスチャをロード
 void Fbx::Draw(Transform& transform)
 {
-    Direct3D::SetShader(SHADER_TOONOUTLINE);
-
+    //Direct3D::SetShader(SHADER_TOONOUTLINE);
+    Direct3D::SetShader(SHADER_NORMALMAP);
     transform.Calclation();//トランスフォームを計算
 
-    for (int j = 0; j < 2; j++)
-    {
+    //for (int j = 0; j < 2; j++)
+    //{
 
     for (int i = 0; i < materialCount_; i++)
     {
@@ -411,8 +411,8 @@ void Fbx::Draw(Transform& transform)
         //描画
         Direct3D::pContext_->DrawIndexed(indexCount_[i], 0, 0);
     }
-    Direct3D::SetShader(SHADER_TOON);
-    }
+    //Direct3D::SetShader(SHADER_TOON);
+    //}
 }
 
 void Fbx::Release()
