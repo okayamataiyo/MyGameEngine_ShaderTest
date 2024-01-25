@@ -58,10 +58,10 @@ void Stage::Initialize()
     hModel_[0] = Model::Load("Assets/Saikoro.fbx");
     assert(hModel_[0] >= 0);
 
-    hModel_[1] = Model::Load("Assets/Ground.fbx");
-    assert(hModel_[1] >= 0);
+    //hModel_[1] = Model::Load("Assets/Ground.fbx");
+    //assert(hModel_[1] >= 0);
 
-    hModel_[2] = Model::Load("Assets/BallNormal02.fbx");
+    hModel_[2] = Model::Load("Assets/Ball3.fbx");
     assert(hModel_[2] >= 0);
 
 
@@ -91,8 +91,8 @@ void Stage::Update()
     Direct3D::pContext_->UpdateSubresource(pCBStageScene_,0, NULL,&cb,0,0); 
     Direct3D::pContext_->VSSetConstantBuffers(1, 1, &pCBStageScene_);//頂点シェーダー
     Direct3D::pContext_->PSSetConstantBuffers(1, 1, &pCBStageScene_);//ピクセルシェーダー
-    Camera::SetPosition(trans_B.position_);
-
+    Camera::SetPosition(trans_A.position_);
+    Camera::SetTarget(trans_B.position_);
     XMFLOAT4 LightPos = { 0,0,0,0 };
     XMFLOAT4 Margin   = { 0,0,0,0 };
 
