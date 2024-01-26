@@ -62,7 +62,7 @@ VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD, float4 normal : NORMAL,fl
 	//ローカル座標に、ワールド・ビュー・プロジェクション行列をかけて
 	//スクリーン座標に変換し、ピクセルシェーダーへ
 	outData.pos = mul(pos, matWVP);
-	outData.uv = (float2)uv;
+	outData.uv = uv;
 
 	float3 binormal = cross(normal, tangent);
 
@@ -88,7 +88,7 @@ VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD, float4 normal : NORMAL,fl
 	float4 light = normalize(lightPosition);
 	light = normalize(light);
 
-	outData.color = mul(light, normal);
+	outData.color = mul(normal, light);
 
 	//outData.light.w = 0;
 	outData.light.x = dot(light, tangent);//接空間の光源ベクトル
@@ -105,7 +105,7 @@ VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD, float4 normal : NORMAL,fl
 float4 PS(VS_OUT inData) : SV_Target
 {
 	//return inData.Neyev;
-	float4 lightSource = float4(0.5,0.5,0.5,0.0);
+	float4 lightSource = float4(1.0,1.0,1.0,1.0);
 	float4 diffuse;
 	float4 ambient;
 
