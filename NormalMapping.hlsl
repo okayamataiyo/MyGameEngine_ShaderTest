@@ -65,35 +65,38 @@ VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD, float4 normal : NORMAL,fl
 	outData.uv = uv;
 
 	float3 binormal = cross(normal, tangent);
-
-	normal.w = 0;
-	normal = mul(normal, matNormal);
-	normal = normalize(normal);				//法線ベクトルをローカル座標に変換したやつ
-
-	tangent.w = 0;
-	tangent = mul(tangent, matNormal);
-	tangent = normalize(tangent);			//接線ベクトルをローカル座標に変換したやつ
-
 	binormal = mul(binormal, matNormal);
 	binormal = normalize(binormal);			//従法線ベクトルをローカル座標に変換したやつ
 
-	float4 posw = mul(pos, matW);
-	outData.eyev = eyePosition - posw;
+	outData.normal = normalize(mul(normal,matNormal));				//法線ベクトルをローカル座標に変換したやつ
+	outData.normal.w = 0;
 
+	tangent = mul(tangent, matNormal);
+	tangent = normalize(tangent);			//接線ベクトルをローカル座標に変換したやつ
+	tangent.w = 0;
+
+	float4 posw = mul(pos, matW);
+	outData.eyev = normalize(posw - eyePosition);
+
+	float4 eye = normalize(mul(pos, matW) - eyePosition);	//ワールド座標の視線ベクトル
+	outData.eyev = eye;
+	outData.Neyev.x = dot(eye, tangent);	//接空間の視線ベクトル
+	outData.Neyev.y = dot(eye, binormal);
+	outData.Neyev.z = dot(eye, outData.normal);
 	outData.Neyev.w = 0;
-	outData.Neyev.x = dot(outData.eyev, tangent);	//接空間の視線ベクトル
-	outData.Neyev.y = dot(outData.eyev, binormal);
-	outData.Neyev.z = dot(outData.eyev, normal);
 
 	float4 light = normalize(lightPosition);
+	light.w = 0;
 	light = normalize(light);
 
-	outData.color = mul(normal, light);
+	outData.color = mul(light, outData.normal);
+	outData.color.w = 0.0;
 
 	//outData.light.w = 0;
 	outData.light.x = dot(light, tangent);//接空間の光源ベクトル
 	outData.light.y = dot(light, binormal);
-	outData.light.z = dot(light, normal);
+	outData.light.z = dot(light, outData.normal);
+	outData.light.w = 0;
 
 	//まとめて出力
 	return outData;
@@ -106,31 +109,31 @@ float4 PS(VS_OUT inData) : SV_Target
 {
 	//return inData.Neyev;
 	float4 lightSource = float4(1.0,1.0,1.0,1.0);
-	float4 diffuse;
-	float4 ambient;
+	float4 diffuse;					//光を合わせた面の色
+	float4 ambient;					//環境光
 
 	if (isNormalMap)
 	{
 		float4 tmpNormal = normalTex.Sample(g_sampler, inData.uv) * 2 - 1;
-		//tmpNormal.w = 0;
 		tmpNormal = normalize(tmpNormal);
+		tmpNormal.w = 0;
 		float4 NL = clamp(dot(tmpNormal, inData.light), 0, 1);			//ノーマルランバーティアン
 		float4 SF = dot(tmpNormal, normalize(inData.light));			//シャドウファクター
 		SF = clamp(SF, 0, 1);
 		
 		float4 reflection = reflect(-inData.light, tmpNormal);
-		float4 specular = pow(saturate(dot(reflection, inData.Neyev)), 2) * specularColor;
+		float4 specular = pow(saturate(dot(reflection, inData.Neyev)), shineness) * specularColor;
 		if (isTexture != 0)
 		{
-			diffuse = g_texture.Sample(g_sampler, inData.uv) * SF;
+			diffuse = g_texture.Sample(g_sampler, inData.uv) * NL;
 			ambient = g_texture.Sample(g_sampler, inData.uv) * ambientColor;
 		}
 		else
 		{
-			diffuse = diffuseColor * SF;
+			diffuse = diffuseColor * NL;
 			ambient = diffuseColor * ambientColor;
 		}
-		diffuse = diffuseColor * NL;
+		//diffuse = diffuseColor * NL;
 
 		return  diffuse + ambient + specular;
 		//return  diffuse;
