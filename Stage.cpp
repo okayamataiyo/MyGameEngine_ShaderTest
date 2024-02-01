@@ -58,8 +58,8 @@ void Stage::Initialize()
     hModel_[0] = Model::Load("Assets/Saikoro.fbx");
     assert(hModel_[0] >= 0);
 
-    //hModel_[1] = Model::Load("Assets/Ground.fbx");
-    //assert(hModel_[1] >= 0);
+    hModel_[1] = Model::Load("Assets/Water.fbx");
+    assert(hModel_[1] >= 0);
 
     hModel_[2] = Model::Load("Assets/Ball3.fbx");
     assert(hModel_[2] >= 0);
@@ -78,12 +78,12 @@ void Stage::Update()
     trans_A.scale_.y = 0.4;
     trans_A.position_.y = 0.5;
     trans_G.position_.y = 0;
-    trans_B.position_.x = 2;
+    trans_B.position_.x = 0;
     trans_B.position_.z = 2;
     trans_B.position_.y = 1;
     trans_B.rotate_.y += 1;
     trans_L.scale_ = { 0.2,0.2,0.2 };
-    //trans_B.rotate_.y += 0.5;
+    trans_G.position_.y -= 1.5;
 
     CBUFF_STAGESCENE cb;
     cb.lightPosition = lightSourcePosition_;
@@ -159,8 +159,8 @@ void Stage::Draw()
     Model::SetTransform(hModel_[0], trans_A);
     Model::Draw(hModel_[0]);
 
-    //Model::SetTransform(hModel_[1], trans_G);
-    //Model::Draw(hModel_[1]);
+    Model::SetTransform(hModel_[1], trans_G);
+    Model::Draw(hModel_[1]);
 
     Model::SetTransform(hModel_[2], trans_B);
     Model::Draw(hModel_[2]);
