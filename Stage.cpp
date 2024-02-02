@@ -78,9 +78,9 @@ void Stage::Update()
     trans_A.scale_.y = 0.4;
     trans_A.position_.y = 0.5;
     trans_G.position_.y = 0;
-    trans_B.position_.x = 2;
-    trans_B.position_.z = 2;
-    trans_B.position_.y = 1;
+    trans_B.position_.x = 0;
+    trans_B.position_.z = 4;
+    trans_B.position_.y = 0.5;
     trans_B.rotate_.y += 1;
     trans_L.scale_ = { 0.2,0.2,0.2 };
     //trans_B.rotate_.y += 0.5;
@@ -156,9 +156,6 @@ void Stage::Update()
 //•`‰æ
 void Stage::Draw()
 {
-    Model::SetTransform(hModel_[0], trans_A);
-    Model::Draw(hModel_[0]);
-
     //Model::SetTransform(hModel_[1], trans_G);
     //Model::Draw(hModel_[1]);
 
@@ -167,6 +164,9 @@ void Stage::Draw()
 
     Model::SetTransform(hModel_[3], trans_L);
     Model::Draw(hModel_[3]);
+
+    Model::SetTransform(hModel_[0], trans_A);
+    Model::Draw(hModel_[0]);
 }
 
 //ŠJ•ú

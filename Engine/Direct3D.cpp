@@ -152,8 +152,8 @@ HRESULT Direct3D::Initialize(int winW, int winH, HWND hWnd)
 	pContext_->OMSetBlendState(pBlendState, blendFactor, 0xffffffff);
 
 	//データを画面に描画するための一通りの設定（パイプライン）
-	pContext_->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);  // データの入力種類を指定
-	pContext_->OMSetRenderTargets(1, &pRenderTargetView_, pDepthStencilView);            // 描画先を設定
+	pContext_->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);  //データの入力種類を指定
+	pContext_->OMSetRenderTargets(1, &pRenderTargetView_, nullptr);            //描画先を設定
 	pContext_->RSSetViewports(1, &vp);
 
 	//シェーダー準備
