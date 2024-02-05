@@ -64,6 +64,13 @@ void Sprite::Draw(Transform& transform)
 
 void Sprite::Draw(XMMATRIX& worldMatrix)
 {
+	static float scroll = 0.0f;
+	scroll += 0.01f;
+	Direct3D::SetShader(SHADER_TYPE::SHADER_2D);
+	UINT stride = sizeof(VERTEX);
+	UINT offset = 0;
+	Direct3D::pContext_->IASetVertexBuffers(0, 1, &pVertexBuffer_, &stride, &offset);
+	Direct3D::pContext_->VSSetConstantBuffers(0, 1, &pConstantBuffer_);
 	PassDataToCB(worldMatrix);
 	SetBufferToPipeline();
 }
