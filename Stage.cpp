@@ -156,8 +156,8 @@ void Stage::Update()
 //•`‰æ
 void Stage::Draw()
 {
-    //Model::SetTransform(hModel_[1], trans_G);
-    //Model::Draw(hModel_[1]);
+    Model::SetTransform(hModel_[1], trans_G);
+    Model::Draw(hModel_[1]);
 
     Model::SetTransform(hModel_[2], trans_B);
     Model::Draw(hModel_[2]);
