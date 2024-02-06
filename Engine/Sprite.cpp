@@ -30,6 +30,7 @@ HRESULT Sprite::Initialize()
 		return E_FAIL;
 	}
 	//コンスタントバッファ作成
+
 	if (FAILED(CreateConstantBuffer()))
 	{
 		return E_FAIL;
@@ -38,34 +39,34 @@ HRESULT Sprite::Initialize()
 	return S_OK;
 }
 
-void Sprite::Draw(Transform& transform, RECT rect, float alpha)
-{
-	Direct3D::SetShader(SHADER_2D);
-
-
-	transform.Calclation();//トランスフォームを計算
-
-	//コンスタントバッファに情報を渡す
-	PassDataToCB(transform.GetWorldMatrix());
-
-	//頂点バッファ、インデックスバッファ、コンスタントバッファをパイプラインにセット
-	SetBufferToPipeline();
-
-	//描画
-	Direct3D::pContext_->DrawIndexed((UINT)indexNum, (UINT)0, (UINT)0);
-
-}
-
-void Sprite::Draw(XMMATRIX& worldMatrix)
-{
-	Direct3D::SetShader(SHADER_TYPE::SHADER_2D);
-	UINT stride = sizeof(VERTEX);
-	UINT offset = 0;
-	Direct3D::pContext_->IASetVertexBuffers(0, 1, &pVertexBuffer_, &stride, &offset);
-	Direct3D::pContext_->VSSetConstantBuffers(0, 1, &pConstantBuffer_);
-	PassDataToCB(worldMatrix);
-	SetBufferToPipeline();
-}
+//void Sprite::Draw(Transform& transform, RECT rect, float alpha)
+//{
+//	Direct3D::SetShader(SHADER_2D);
+//
+//
+//	transform.Calclation();//トランスフォームを計算
+//
+//	//コンスタントバッファに情報を渡す
+//	PassDataToCB(transform.GetWorldMatrix());
+//
+//	//頂点バッファ、インデックスバッファ、コンスタントバッファをパイプラインにセット
+//	SetBufferToPipeline();
+//
+//	//描画
+//	Direct3D::pContext_->DrawIndexed((UINT)indexNum, (UINT)0, (UINT)0);
+//
+//}
+//
+//void Sprite::Draw(XMMATRIX& worldMatrix)
+//{
+//	Direct3D::SetShader(SHADER_TYPE::SHADER_2D);
+//	UINT stride = sizeof(VERTEX);
+//	UINT offset = 0;
+//	Direct3D::pContext_->IASetVertexBuffers(0, 1, &pVertexBuffer_, &stride, &offset);
+//	Direct3D::pContext_->VSSetConstantBuffers(0, 1, &pConstantBuffer_);
+//	PassDataToCB(worldMatrix);
+//	SetBufferToPipeline();
+//}
 
 void Sprite::Release()
 {

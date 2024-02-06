@@ -42,8 +42,8 @@ public:
 
 	//描画
 	//引数：worldMatrix　ワールド行列
-	void Draw(Transform& transform, RECT rect,float alpha);
-	void Draw(XMMATRIX& worldMatrix);
+	//void Draw(Transform& transform, RECT rect,float alpha);
+	//void Draw(XMMATRIX& worldMatrix);
 
 	//解放
 	void Release();
