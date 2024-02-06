@@ -22,5 +22,5 @@ public:
 	ID3D11SamplerState* GetSampler() { return pSampler_; }
 	ID3D11ShaderResourceView* GetSRV() { return pSRV_; }
 	XMFLOAT2 GetSize() { return imgSize_; }					//‰æ‘œƒTƒCƒY‚ÌŽæ“¾
-}
+};
 
