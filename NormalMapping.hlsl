@@ -13,6 +13,7 @@ cbuffer gmodel:register(b0) //オブジェクトに関係あるやつ
 	float	 shineness;			//ハイライトの広がりの大きさ
 	bool     isTexture;			//テクスチャーが貼られているかどうか
 	bool	 isNormalMap;		//ノーマルマップがあるかどうか
+	float	 scroll;
 }
 
 cbuffer gmodel:register(b1)	//オブジェクトに関係ないやつ
@@ -112,9 +113,12 @@ float4 PS(VS_OUT inData) : SV_Target
 	float4 diffuse;					//光を合わせた面の色
 	float4 ambient;					//環境光
 
+	float2 tmpNormalUV = inData.uv;
+	tmpNormalUV.x = tmpNormalUV.x + scroll;
+
 	if (isNormalMap)
 	{
-		float4 tmpNormal = normalTex.Sample(g_sampler, inData.uv) * 2 - 1;
+		float4 tmpNormal = normalTex.Sample(g_sampler, tmpNormalUV) * 2 - 1;
 		tmpNormal = normalize(tmpNormal);
 		tmpNormal.w = 0;
 		float4 NL = clamp(dot(tmpNormal, inData.light), 0, 1);			//ノーマルランバーティアン

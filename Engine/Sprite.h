@@ -4,8 +4,6 @@
 #include <vector>
 #include "Transform.h"
 
-#define SAFE_DELETE_ARRAY(p) if(p !=　nullptr) {delete[]p; p != nullptr; }
-
 using std::vector;
 
 class Sprite
@@ -16,7 +14,6 @@ class Sprite
 		XMMATRIX    matW;     //ワールド行列
 		XMMATRIX	uvTrans;
 		XMFLOAT4	color;
-		float		scroll;
 	};
 
 	//頂点情報
@@ -53,9 +50,6 @@ public:
 
 	XMFLOAT2 GetTextureSize() { return pTexture_->GetTextureSize(); }
 
-	HRESULT Load(std::string fileName);
-	float scrollVal;
-
 private:
 	//---------Initiallizeから呼ばれる関数---------
 	virtual void InitVertexData();       //頂点情報の準備
@@ -66,7 +60,7 @@ private:
 
 	HRESULT CreateConstantBuffer();      //コンスタントバッファ作成
 
-	HRESULT LoadTexture();               //テクスチャをロード
+	HRESULT LoadTexture(string fileName);               //テクスチャをロード
 
 	//---------Draw関数から呼ばれる関数----------
 	void PassDataToCB(XMMATRIX worldMatrix);     //コンスタントバッファに各種情報を渡す

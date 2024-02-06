@@ -1,9 +1,10 @@
 ﻿#include "Sprite.h"
 #include "Camera.h"
+#include "../Global.h"
 
 Sprite::Sprite():
 	vertexNum_(0),pVertexBuffer_(nullptr),indexNum(0),pIndexBuffer_(nullptr),
-	pConstantBuffer_(nullptr),pTexture_(nullptr),scrollVal(0)
+	pConstantBuffer_(nullptr),pTexture_(nullptr)
 {
 
 
@@ -33,28 +34,12 @@ HRESULT Sprite::Initialize()
 	{
 		return E_FAIL;
 	}
-	//テクスチャのロード
-	if (FAILED(LoadTexture()))
-	{
-		return E_FAIL;
-	}
 
 	return S_OK;
 }
 
 void Sprite::Draw(Transform& transform, RECT rect, float alpha)
 {
-	scrollVal = scrollVal + 0.001f;
-	CONSTANT_BUFFER cb;
-
-	XMMATRIX mTexTrans = XMMatrixTranslation((float)rect.left / (float)pTexture_->GetSize().x,
-		(float)rect.top / (float)pTexture_->GetSize().y, 0.0f);
-	XMMATRIX mTexScale = XMMatrixScaling((float)rect.right / (float)pTexture_->GetSize().x,
-		(float)rect.bottom / (float)pTexture_->GetSize().y, 1.0f);
-	XMMATRIX mTexel = mTexScale * mTexTrans;
-	cb.uvTrans = XMMatrixTranspose(mTexel);
-	cb.color = XMFLOAT4(1, 1, 1, alpha);
-	cb.scroll = scrollVal;
 	Direct3D::SetShader(SHADER_2D);
 
 
@@ -91,8 +76,6 @@ void Sprite::Release()
 	SAFE_RELEASE(pVertexBuffer_);
 	
 }
-
-//ここからprivate関数
 
 //頂点情報の準備
 void Sprite::InitVertexData()
@@ -199,16 +182,12 @@ HRESULT Sprite::CreateConstantBuffer()
 }
 
 //テクスチャをロード
-HRESULT Sprite::LoadTexture(){
+HRESULT Sprite::LoadTexture(string fileName){
 
 	pTexture_ = new Texture();
 
 	HRESULT hr;
-	hr = pTexture_->Load("Assets\\BoxPappillon.png");
-	if (FAILED(hr)) {
-		MessageBox(NULL, "テクスチャの作成に失敗しました", "エラー", MB_OK);
-		return hr;
-	}
+	pTexture_->Load(fileName);
 
 	return S_OK;
 }

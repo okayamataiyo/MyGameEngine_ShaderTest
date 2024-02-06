@@ -37,6 +37,7 @@ class Fbx
 		float  shineness;
 		BOOL isTextured;
 		BOOL isNormalMap;
+		float scroll;
 	};
 
 	//’¸“_î•ñ
@@ -65,6 +66,7 @@ class Fbx
 	bool IsFloatColor_;
 	XMFLOAT4 dColor_;
 	XMFLOAT4 lightSourcePosition_;
+	float scrollVal_;
 
 public:
 	//ƒƒ“ƒoŠÖ”

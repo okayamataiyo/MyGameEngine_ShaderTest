@@ -324,6 +324,8 @@ void Fbx::Draw(Transform& transform)
     Direct3D::SetShader(SHADER_NORMALMAP);
     transform.Calclation();//トランスフォームを計算
 
+    scrollVal_ = scrollVal_ + 0.001f;
+
     //for (int j = 0; j < 2; j++)
     //{
 
@@ -341,6 +343,7 @@ void Fbx::Draw(Transform& transform)
         cb.shineness = pMaterialList_[i].shineness;
         cb.isTextured = pMaterialList_[i].pTexture != nullptr;
         cb.isNormalMap = pMaterialList_[i].pNormalMap != nullptr;
+        cb.scroll = scrollVal_;
 
         Direct3D::pContext_->UpdateSubresource(pConstantBuffer_, 0, NULL, &cb, 0, 0);
 
