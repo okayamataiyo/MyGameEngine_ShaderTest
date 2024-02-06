@@ -1,10 +1,12 @@
+#pragma once
 #include "Direct3D.h"
 #include "Texture.h"
 #include <vector>
 #include "Transform.h"
-#pragma once
 
-#define SAFE_DELETE_ARRAY(p) if(p !=　nullptr) {delete[p; p != nullptr;] }
+#define SAFE_DELETE_ARRAY(p) if(p !=　nullptr) {delete[]p; p != nullptr; }
+
+using std::vector;
 
 class Sprite
 {
@@ -12,6 +14,9 @@ class Sprite
 	struct CONSTANT_BUFFER
 	{
 		XMMATRIX    matW;     //ワールド行列
+		XMMATRIX	uvTrans;
+		XMFLOAT4	color;
+		float		scroll;
 	};
 
 	//頂点情報
@@ -22,15 +27,13 @@ class Sprite
 	};
 protected:
 	UINT64 vertexNum_;                 //頂点数
-	std::vector<VERTEX> vertices_;     //頂点情報
+	vector<VERTEX> vertices_;     //頂点情報
 	ID3D11Buffer* pVertexBuffer_;    //頂点バッファ
 
 	UINT64 indexNum;                 //インデックス数
-	std::vector<int> index_;          //インデックス情報
-
+	vector<int> index_;          //インデックス情報
 	ID3D11Buffer* pIndexBuffer_;          //インデックスバッファ
 	ID3D11Buffer* pConstantBuffer_;       //コンスタントバッファ
-
 	Texture* pTexture_;                  //テクスチャ
 public:
 	Sprite();
@@ -42,11 +45,16 @@ public:
 
 	//描画
 	//引数：worldMatrix　ワールド行列
-	void Draw(Transform& transform);
+	void Draw(Transform& transform, RECT rect,float alpha);
 	void Draw(XMMATRIX& worldMatrix);
 
 	//解放
 	void Release();
+
+	XMFLOAT2 GetTextureSize() { return pTexture_->GetTextureSize(); }
+
+	HRESULT Load(std::string fileName);
+	float scrollVal;
 
 private:
 	//---------Initiallizeから呼ばれる関数---------

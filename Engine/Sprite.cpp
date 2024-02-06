@@ -1,11 +1,10 @@
 ﻿#include "Sprite.h"
 #include "Camera.h"
 
-Sprite::Sprite()
-	:vertexNum_(0),pVertexBuffer_(nullptr),
-	indexNum(0),pIndexBuffer_(nullptr),
-	pConstantBuffer_(nullptr),
-	pTexture_(nullptr){
+Sprite::Sprite():
+	vertexNum_(0),pVertexBuffer_(nullptr),indexNum(0),pIndexBuffer_(nullptr),
+	pConstantBuffer_(nullptr),pTexture_(nullptr),scrollVal(0)
+{
 
 
 }
@@ -43,9 +42,19 @@ HRESULT Sprite::Initialize()
 	return S_OK;
 }
 
-void Sprite::Draw(Transform& transform)
+void Sprite::Draw(Transform& transform, RECT rect, float alpha)
 {
+	scrollVal = scrollVal + 0.001f;
+	CONSTANT_BUFFER cb;
 
+	XMMATRIX mTexTrans = XMMatrixTranslation((float)rect.left / (float)pTexture_->GetSize().x,
+		(float)rect.top / (float)pTexture_->GetSize().y, 0.0f);
+	XMMATRIX mTexScale = XMMatrixScaling((float)rect.right / (float)pTexture_->GetSize().x,
+		(float)rect.bottom / (float)pTexture_->GetSize().y, 1.0f);
+	XMMATRIX mTexel = mTexScale * mTexTrans;
+	cb.uvTrans = XMMatrixTranspose(mTexel);
+	cb.color = XMFLOAT4(1, 1, 1, alpha);
+	cb.scroll = scrollVal;
 	Direct3D::SetShader(SHADER_2D);
 
 
@@ -58,14 +67,12 @@ void Sprite::Draw(Transform& transform)
 	SetBufferToPipeline();
 
 	//描画
-	Direct3D::pContext_->DrawIndexed(indexNum, 0, 0);
+	Direct3D::pContext_->DrawIndexed((UINT)indexNum, (UINT)0, (UINT)0);
 
 }
 
 void Sprite::Draw(XMMATRIX& worldMatrix)
 {
-	static float scroll = 0.0f;
-	scroll += 0.01f;
 	Direct3D::SetShader(SHADER_TYPE::SHADER_2D);
 	UINT stride = sizeof(VERTEX);
 	UINT offset = 0;
