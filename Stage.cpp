@@ -81,7 +81,7 @@ void Stage::Update()
     trans_G.position_.y = 0;
     trans_B.position_.x = 0;
     trans_B.position_.z = 4;
-    trans_B.position_.y = 0.5;
+    trans_B.position_.y = -1.5;
     trans_B.rotate_.y += 1;
     trans_L.scale_ = { 0.2,0.2,0.2 };
     trans_G.position_.y -= 1.5;

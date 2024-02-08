@@ -115,7 +115,6 @@ float4 PS(VS_OUT inData) : SV_Target
 
 	float2 tmpNormalUV = inData.uv;
 	tmpNormalUV.x = tmpNormalUV.x + scroll;
-
 	if (isNormalMap)
 	{
 		float4 tmpNormal = normalTex.Sample(g_sampler, tmpNormalUV) * 2 - 1;
@@ -159,6 +158,7 @@ float4 PS(VS_OUT inData) : SV_Target
 			ambient = lightSource * g_texture.Sample(g_sampler, inData.uv) * ambientColor;
 		}
 		float4 result =  diffuse + ambient + specular;
+		result.a = (result.r + result.g + result.b) / 3;
 		//if (isTexture)
 		//	result.a = inData.uv.x;
 		return result;
