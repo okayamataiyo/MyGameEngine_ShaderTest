@@ -117,15 +117,16 @@ float4 PS(VS_OUT inData) : SV_Target
 	float2 tmpNormalUV = inData.uv;
 	tmpNormalUV.x = tmpNormalUV.x + scrollX;
 	tmpNormalUV.y = tmpNormalUV.y + scrollY;
-	float2 tmpPlus = tmpNormalUV.x + tmpNormalUV.y;
-	tmpPlus = normalize(tmpPlus);
+	float2 tmpNormalUV2 = inData.uv;
+	tmpNormalUV2.x = tmpNormalUV2.x - scrollX;
+	tmpNormalUV2.y = tmpNormalUV2.y - scrollY;
 	if (isNormalMap)
 	{
 		float4 tmpNormal = normalTex.Sample(g_sampler, tmpNormalUV) * 2 - 1;
-		float4 tmpNormal2 = normalTex.Sample(g_sampler, tmpPlus) * 2 - 1;
+		float4 tmpNormal2 = normalTex.Sample(g_sampler, tmpNormalUV2) * 2 - 1;
 		tmpNormal.w = 0;
 		tmpNormal2.w = 0;
-		tmpNormal = normalize(tmpNormal + tmpNormal2);
+		tmpNormal = normalize(tmpNormal + tmpNormal2) /2;
 		float4 NL = clamp(dot(tmpNormal, inData.light), 0, 1);			//ノーマルランバーティアン
 		float4 SF = dot(tmpNormal, normalize(inData.light));			//シャドウファクター
 		SF = clamp(SF, 0, 1);
@@ -144,8 +145,8 @@ float4 PS(VS_OUT inData) : SV_Target
 		}
 		//diffuse = diffuseColor * NL;
 		float4 result = diffuse + ambient + specular;
-		result.a = ((result.r + result.g + result.b) / 3) + 0.5;
-		return result;
+		result.a = ((result.r + result.g + result.b) / 3) + 1;
+		return specular;
 		//return  diffuse;
 	}
 	else
@@ -168,6 +169,6 @@ float4 PS(VS_OUT inData) : SV_Target
 		result.a = (result.r + result.g + result.b) / 3;
 		//if (isTexture)
 		//	result.a = inData.uv.x;
-		return result;
+		return result.a;
 	}
 }

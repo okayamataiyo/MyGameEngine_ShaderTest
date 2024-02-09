@@ -6,10 +6,10 @@
 #include "Engine/Fbx.h"
 #include "Stage.h"
 
-Transform trans_G;
-Transform trans_A;
-Transform trans_B;
-Transform trans_L;
+Transform watTrans;
+Transform saiTrans;
+Transform balTrans;
+Transform pipTrans;
 
 namespace 
 {
@@ -69,31 +69,32 @@ void Stage::Initialize()
     hModel_[3] = Model::Load("Assets/Pipe.fbx");
     assert(hModel_[3] >= 0);
 
+    saiTrans.rotate_     = { 0,0,90 };
+    saiTrans.position_   = { 0,2,-2 };
+    saiTrans.scale_      = { 0.5,0.5,0.5};
+    watTrans.position_   = { 0,-1.5,0};
+    balTrans.position_   = { 0,-2,4};
+    pipTrans.scale_      = { 0.2,0.2,0.2 };
+
     IntConstantBuffer();
 }
 
 //更新
 void Stage::Update()
 {
-    trans_A.rotate_.z = 90;
-    trans_A.scale_.y = 0.4;
-    trans_A.position_.y = 0.5;
-    trans_G.position_.y = 0;
-    trans_B.position_.x = 0;
-    trans_B.position_.z = 4;
-    trans_B.position_.y = -1.5;
-    trans_B.rotate_.y += 1;
-    trans_L.scale_ = { 0.2,0.2,0.2 };
-    trans_G.position_.y -= 1.5;
-
+    saiTrans.rotate_.x += 1;
     CBUFF_STAGESCENE cb;
     cb.lightPosition = lightSourcePosition_;
     XMStoreFloat4(&cb.eyePos, Camera::GetEyePosition());
     Direct3D::pContext_->UpdateSubresource(pCBStageScene_,0, NULL,&cb,0,0); 
     Direct3D::pContext_->VSSetConstantBuffers(1, 1, &pCBStageScene_);//頂点シェーダー
     Direct3D::pContext_->PSSetConstantBuffers(1, 1, &pCBStageScene_);//ピクセルシェーダー
-    //Camera::SetPosition(trans_A.position_);
-    //Camera::SetTarget(trans_B.position_);
+    XMFLOAT3 pipPos;
+    pipPos = pipTrans.position_;
+    pipPos.y += 5;
+    pipPos.z += -10;
+    Camera::SetPosition(pipPos);
+    Camera::SetTarget(pipTrans.position_);
     XMFLOAT4 LightPos = { 0,0,0,0 };
     XMFLOAT4 Margin   = { 0,0,0,0 };
 
@@ -141,33 +142,33 @@ void Stage::Update()
 
     if (Input::IsMouseButton(0))
     {
-        trans_L.rotate_.y += 1.0f;
+        pipTrans.rotate_.y += 1.0f;
     }
 
     if (Input::IsMouseButton(1))
     {
-        trans_L.rotate_.y -= 1.0f;
+        pipTrans.rotate_.y -= 1.0f;
     }
 
     XMFLOAT4 tmp{ GetLightPos() };
-    trans_L.position_ = { tmp.x,tmp.y,tmp.z };
+    pipTrans.position_ = { tmp.x,tmp.y,tmp.z };
 
 }
 
 //描画
 void Stage::Draw()
 {
-    Model::SetTransform(hModel_[1], trans_G);
+    Model::SetTransform(hModel_[0], saiTrans);
+    Model::Draw(hModel_[0]);
+
+    Model::SetTransform(hModel_[1], watTrans);
     Model::Draw(hModel_[1]);
 
-    Model::SetTransform(hModel_[2], trans_B);
+    Model::SetTransform(hModel_[2], balTrans);
     Model::Draw(hModel_[2]);
 
-    Model::SetTransform(hModel_[3], trans_L);
+    Model::SetTransform(hModel_[3], pipTrans);
     Model::Draw(hModel_[3]);
-
-    Model::SetTransform(hModel_[0], trans_A);
-    Model::Draw(hModel_[0]);
 }
 
 //開放
